@@ -32,7 +32,7 @@ long_study_data = as_tibble(list.files("./data"))
 
 ## Iterating over File Names
 
-```{r}
+```{r, message = FALSE}
 long_study_output =
   map(.x = long_study_data, ~ read_csv(.x))
 
@@ -52,6 +52,8 @@ nest_long_study_data = long_study_output %>%
     week_8 = value.week_8
   ) %>% 
   nest(data = week_1:week_8)
+
+knitr::kable(nest_long_study_data)
 ```
 
 ## Tidying Data
@@ -71,11 +73,13 @@ tidied_nest_data = nest_long_study_data %>%
   ),
    id = substr(id, start = 1, stop = 2)
   )
+
+knitr::kable(tidied_nest_data)
 ```
 
 ## Spaghetti Plot
 
-```{r}
+```{r, message = FALSE}
 spaghetti_plot = tidied_nest_data %>% 
   unnest(data) %>% 
   pivot_longer(week_1:week_8, names_to = "week", values_to = "value") %>% 
@@ -104,6 +108,8 @@ spaghetti_plot = tidied_nest_data %>%
 ggsave("spaghetti_plot.png")
 knitr::include_graphics("spaghetti_plot.png")
 ```
+
+The panel showing controls spaghetti plots that do not demonstrate very much increase or decrease in values for every patient. The experimental panel, however, shows an increase in values across time for every single patient. The control group also has more instances of negative values, whereas the experimental group has some in the early weeks, but the steady increases eliminate these. Overall, the trends seen in these spaghetti plots show increases in only the experimental group, even though observed values in week 1 are similar, with the control group showing relatively steady values.
 
 ### Problem 3
 
@@ -140,11 +146,11 @@ missing_fill_func = function(x) {
 ```
 
 ```{r}
-missing_fill_func(iris_with_missing$Sepal.Length)
+filled_in_df = iris_with_missing %>% map_df(missing_fill_func)
 
-iris_with_missing %>% 
-  mutate(
-    Sepal.Length = map_dbl(Sepal.Length, missing_fill_func)
-    )
+number_missing_values =
+  sum(is.na(filled_in_df))
+
+print(number_missing_values)
 ```
 
