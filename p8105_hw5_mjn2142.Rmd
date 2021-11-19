@@ -24,7 +24,20 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ### Problem 2
 
+## Dataframe with All File Names
+
 ```{r}
 long_study_data = as_tibble(list.files("./data"))
+```
+
+## Iterating over File Names
+
+```{r}
+long_study_output =
+  map(.x = long_study_data, ~ read_csv(.x))
+
+nest_long_study_data = 
+  merge(long_study_data, long_study_output) %>% 
+  nest(data = value.week_1:value.week_8)
 ```
 
