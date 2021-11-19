@@ -76,6 +76,22 @@ tidied_nest_data = nest_long_study_data %>%
 ## Spaghetti Plot
 
 ```{r}
+spaghetti_plot = tidied_nest_data %>% 
+  unnest(data) %>% 
+  pivot_longer(week_1:week_8, names_to = "week", values_to = "value") %>% 
+  ggplot(aes(x = week, y = value, group = id, color = id)) +
+  geom_line() +
+  facet_grid(. ~ group) +
+  labs(
+    title = "Values for Experimental and Control Groups over Time",
+    x = "Week",
+    y = "Value"
+  )
 
+ggsave("spaghetti_plot.png")
+knitr::include_graphics("spaghetti_plot.png")
 ```
+
+### Problem 3
+
 
