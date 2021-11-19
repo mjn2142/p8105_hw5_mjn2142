@@ -41,3 +41,23 @@ nest_long_study_data =
   nest(data = value.week_1:value.week_8)
 ```
 
+## Tidying Data
+
+```{r}
+tidied_nest_data = nest_long_study_data %>% 
+  separate(
+    col = value,
+    into = c("group", "id"),
+    sep = "_"
+  ) %>% 
+  mutate(
+  group = recode(
+    group,
+    "con" = "control",
+    "exp" = "experimental"
+  ),
+   id = substr(id, start = 1, stop = 2)
+  )
+)
+```
+
